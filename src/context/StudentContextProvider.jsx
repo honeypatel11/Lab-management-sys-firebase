@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react"
 import { db } from "../config/firebase";
 import { PcContext } from "./PcContextProvider";
@@ -19,15 +19,16 @@ const StudentContextProvider = ({ children }) => {
     try {
       const stuDateObj = { ...student, createdAt: new Date() }
       await addDoc(collectionRefer, stuDateObj);
+      toast.success("student add successfully")
       await updateDoc(doc(db, "pcs", student.pcId), {
         status: "occupied",
       });
-      fetchStudent();
-      fetchPc();
     } catch (error) {
       console.log(error);
-      toast.error("Something Went Wrong !")
+      // toast.error("Something Went Wrong !")
     }
+    await fetchStudent();
+    await fetchPc();
   }
 
   const fetchStudent = async () => {
@@ -49,14 +50,29 @@ const StudentContextProvider = ({ children }) => {
 
   const deleteStudent = async (studentId) => {
     try {
-      await deleteDoc(doc(db, "students", studentId))
-      toast.success("Delete Student Successfully !")
-      fetchStudent()
+      const studentDoc = await getDoc(doc(db, "students", studentId));
+
+      const studentData = studentDoc.data();
+
+      await deleteDoc(doc(db, "students", studentId));
+      toast.success("Delete Student Successfully!");
+
+      if (studentData.pcId) {
+        await updateDoc(doc(db, "pcs", studentData.pcId), {
+          status: "Available",
+        });
+      }
+
+      await fetchStudent();
+      await fetchPc();
     } catch (error) {
       console.log(error);
-      toast.error("Something Went Wrong !")
+      toast.error("Something Went Wrong!");
     }
-  }
+  };
+
+  
+
 
   const updateStudent = async (updatedVal, studentId) => {
     try {
@@ -68,18 +84,15 @@ const StudentContextProvider = ({ children }) => {
     }
   }
   const showPcName = (pcId) => {
-    if (pcs.length !== 0) {
-      const pcName = pcs.find((pc) => {
-        return pcId == pc.pcId
-      })
-      return pcName?.name ? pcName?.name : "Not Assigned";
-    } else {
-      return "Not Assigned"
-    }
-  }
+    if (!pcs || pcs.length === 0) return "Unassigned";
+    const pc = pcs.find((pc) => pc.id === pcId);
+    return pc ? pc.name : "Unassigned";
+  };
+
+
 
   const value = {
-    students, addStudent, fetchStudent, showPcName, deleteStudent , updateStudent
+    students, addStudent, fetchStudent, showPcName, deleteStudent, updateStudent
   }
   return (
     <StudentContext.Provider value={value}>
@@ -88,4 +101,4 @@ const StudentContextProvider = ({ children }) => {
   )
 }
 
-export default StudentContextProvider
+export default StudentContextProvider;

@@ -1,5 +1,4 @@
-
-import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where, writeBatch } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where, writeBatch } from "firebase/firestore";
 import { createContext, useEffect, useState } from "react"
 import { db } from "../config/firebase"
 import { toast } from "react-toastify";
@@ -9,15 +8,20 @@ export const LabContext = createContext();
 const LabContextProvider = ({ children }) => {
 
   const [labs, setLabs] = useState([]);
-  const collectionRefe = collection(db, "labs")
-
+  const collectionRefe = collection(db, "labs");
 
   useEffect(() => {
     fetchLab();
   }, [])
+
   const addLab = async (lab) => {
     try {
-      const dateobj = { ...lab, createdAt: new Date() }
+      const { capacity, ...data } = lab
+      const dateobj = { ...data,
+        capacity: Number(capacity), 
+        createdAt: new Date(),
+        spaceLeft: Number(capacity) 
+      }
       await addDoc(collectionRefe, dateobj)
       fetchLab();
     } catch (error) {
@@ -82,4 +86,4 @@ const LabContextProvider = ({ children }) => {
   )
 }
 
-export default LabContextProvider
+export default LabContextProvider;

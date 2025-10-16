@@ -1,18 +1,18 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-// import Dashboard from "./pages/Dashboard";
-// import Login from "./pages/Login";
+
+
 import ProtectedRoute from "./components/ProtectedRoute";
 import { ToastContainer } from "react-toastify";
 import Header from "./components/Header";
-// import Lab from "./pages/labs/Lab";
+import Lab from "./pages/labs/Lab";
 import ManageLab from "./pages/labs/ManageLab";
 import Pc from "./pages/pcs/Pc";
-import ManagePc from "./pages/pcs/ManagePc";
+// import ManagePc from "./pages/pcs/ManagePc";
 // import Student from "./pages/students/Student";
 // import ManageStudent from "./pages/students/ManageStudent";
 import Dashboard from "./Dashboard";
 import Login from "./Login";
-import Lab from "./pages/labs/Lab";
+import ManagePc from "./pages/pcs/ManagePc";
 import Student from "./pages/student/Student";
 import ManageStudent from "./pages/student/ManageStudent";
 
