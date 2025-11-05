@@ -1,8 +1,7 @@
-// import { useEffect, useState } from "react";
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../context/AuthContextProvider";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { AuthContext } from "./context/AuthContextProvider";
 
 const Login = () => {
   const [loading, setLoading] = useState(true);
@@ -11,22 +10,18 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
-      navigate("/");
-    }
-  }, [user]);
+    if (user) navigate("/");
+  }, [user, navigate]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    const timer = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(timer);
   }, []);
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-black">
-        <div className="w-16 h-16 border-4 border-white border-dashed rounded-full animate-spin"></div>
+      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-indigo-200 via-purple-200 to-pink-200">
+        <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -35,30 +30,28 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await handleLogin(input.email, input.password);
-      if (res) {
-        navigate("/");
-      }
+      if (res) navigate("/");
     } catch (error) {
       if (error.code === "auth/invalid-credential") {
-        toast.error("Invalid credential");
+        toast.error("Invalid credentials");
       }
     }
   };
 
   return (
-    <div className="bg-black h-screen flex items-center justify-center">
-      <div className="bg-white p-8 rounded-2xl shadow-lg w-80 md:w-96">
-        <h1 className="text-3xl text-center mb-8 text-black font-semibold">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-100">
+      <div className="bg-white/80 backdrop-blur-xl border border-white/50 shadow-2xl rounded-2xl w-80 md:w-96 p-8 transition-transform hover:scale-[1.01] duration-200">
+        <h1 className="text-4xl font-extrabold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-pink-600 drop-shadow-sm">
           Lab Login
         </h1>
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-5">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
             <label
               htmlFor="email"
-              className="block mb-2 text-sm font-medium text-black"
+              className="block mb-2 text-sm font-medium text-gray-800"
             >
-              Your email
+              Email
             </label>
             <input
               type="email"
@@ -69,16 +62,16 @@ const Login = () => {
               }
               placeholder="admin@gmail.com"
               required
-              className="bg-transparent border border-black text-black text-sm rounded-lg focus:ring-black focus:border-black block w-full p-2.5 placeholder-gray-500"
+              className="bg-white/60 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 block w-full p-2.5 placeholder-gray-500"
             />
           </div>
 
-          <div className="mb-5">
+          <div>
             <label
               htmlFor="password"
-              className="block mb-2 text-sm font-medium text-black"
+              className="block mb-2 text-sm font-medium text-gray-800"
             >
-              Your password
+              Password
             </label>
             <input
               type="password"
@@ -88,15 +81,15 @@ const Login = () => {
                 setInput({ ...input, [e.target.id]: e.target.value })
               }
               required
-              className="bg-transparent border border-black text-black text-sm rounded-lg focus:ring-black focus:border-black block w-full p-2.5 placeholder-gray-500"
+              className="bg-white/60 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 block w-full p-2.5 placeholder-gray-500"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-black text-white font-medium rounded-lg text-sm px-5 py-2.5 hover:bg-gray-900 transition"
+            className="w-full py-2.5 rounded-lg font-semibold text-white bg-gradient-to-r from-indigo-600 to-pink-600 shadow-md hover:opacity-90 transition"
           >
-            Submit
+            Sign In
           </button>
         </form>
       </div>

@@ -1,4 +1,3 @@
-
 import { toast } from "react-toastify";
 import { LabContext } from "../../context/LabContextProvider";
 import { useNavigate, useParams } from "react-router-dom";
@@ -7,122 +6,136 @@ import { db } from "../../config/firebase";
 import { useContext, useEffect, useState } from "react";
 
 const ManageLab = () => {
-    const [input, setInput] = useState({
-        name: "",
-        capacity: "",
-        location: "",
-    });
-    const { addLab, updatedLab } = useContext(LabContext);
-    const navigate = useNavigate();
-    const [isEdit, setIsEdit] = useState(false);
-    const { labId } = useParams();
+  const [input, setInput] = useState({
+    name: "",
+    capacity: "",
+    location: "",
+  });
 
-    useEffect(() => {
-        if (labId) {
-            getLab();
-        }
-    }, [labId]);
+  const { addLab, updatedLab } = useContext(LabContext);
+  const navigate = useNavigate();
+  const [isEdit, setIsEdit] = useState(false);
+  const { labId } = useParams();
 
-    const getLab = async () => {
-        let labsnap = await getDoc(doc(db, "labs", labId));
-        if (labsnap.exists()) {
-            setIsEdit(true);
-            setInput(labsnap.data());
-        }
-    };
+  useEffect(() => {
+    if (labId) {
+      getLab();
+    }
+  }, [labId]);
 
-    const handleChange = (e) => {
-        setInput({ ...input, [e.target.id]: e.target.value });
-    };
+  const getLab = async () => {
+    let labsnap = await getDoc(doc(db, "labs", labId));
+    if (labsnap.exists()) {
+      setIsEdit(true);
+      setInput(labsnap.data());
+    }
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  const handleChange = (e) => {
+    setInput({ ...input, [e.target.id]: e.target.value });
+  };
 
-        if (!input.name.trim() || !input.capacity.trim() || !input.location.trim()) {
-            toast.error("Enter All Lab Details !");
-            return;
-        }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        if (isEdit) {
-            await updatedLab(labId, input);
-            toast.success("Lab Updated Successfully !");
-        } else {
-            await addLab(input);
-            toast.success("Lab Added Successfully !");
-        }
+    if (!input.name.trim() || !input.capacity.trim() || !input.location.trim()) {
+      toast.error("Enter All Lab Details !");
+      return;
+    }
 
-        navigate("/labs");
-    };
+    if (isEdit) {
+      await updatedLab(labId, input);
+      toast.success("Lab Updated Successfully !");
+    } else {
+      await addLab(input);
+      toast.success("Lab Added Successfully !");
+    }
 
-    return (
-        <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-10">
-            <div className="bg-white shadow-lg rounded-2xl w-full max-w-lg p-8">
-                <h1 className="text-3xl font-bold text-center mb-8 text-black">
-                    {isEdit ? "Edit Lab" : "Add New Lab"}
-                </h1>
+    navigate("/labs");
+  };
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    <div>
-                        <label
-                            htmlFor="name"
-                            className="block mb-2 text-sm font-medium text-gray-900"
-                        >
-                            Lab Name
-                        </label>
-                        <input
-                            onChange={handleChange}
-                            value={input.name}
-                            id="name"
-                            placeholder="Enter lab name"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-black focus:border-black block w-full p-2.5"
-                            required
-                        />
-                    </div>
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-pink-100 to-purple-100 p-8">
+      <div className="bg-white/90 backdrop-blur-md border border-gray-200 shadow-2xl rounded-2xl w-full max-w-lg p-10 transition-all hover:shadow-pink-200">
+        <h1 className="text-4xl font-extrabold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-pink-600">
+          {isEdit ? "Edit Lab" : "Add New Lab"}
+        </h1>
 
-                    <div>
-                        <label
-                            htmlFor="capacity"
-                            className="block mb-2 text-sm font-medium text-gray-900"
-                        >
-                            Capacity
-                        </label>
-                        <input
-                            onChange={handleChange}
-                            value={input.capacity}
-                            id="capacity"
-                            placeholder="Enter capacity"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-black focus:border-black block w-full p-2.5"
-                            required
-                        />
-                    </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+        
+          <div>
+            <label
+              htmlFor="name"
+              className="block mb-2 text-sm font-semibold text-gray-800"
+            >
+              Lab Name
+            </label>
+            <input
+              onChange={handleChange}
+              value={input.name}
+              id="name"
+              placeholder="Enter lab name"
+              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-pink-400 focus:border-pink-400 block w-full p-3 shadow-sm"
+              required
+            />
+          </div>
 
-                    <div>
-                        <label
-                            htmlFor="location"
-                            className="block mb-2 text-sm font-medium text-gray-900"
-                        >
-                            Location
-                        </label>
-                        <input
-                            onChange={handleChange}
-                            value={input.location}
-                            id="location"
-                            placeholder="Enter location"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-black focus:border-black block w-full p-2.5"
-                            required
-                        />
-                    </div>
+      
+          <div>
+            <label
+              htmlFor="capacity"
+              className="block mb-2 text-sm font-semibold text-gray-800"
+            >
+              Capacity
+            </label>
+            <input
+              onChange={handleChange}
+              value={input.capacity}
+              id="capacity"
+              placeholder="Enter capacity"
+              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 block w-full p-3 shadow-sm"
+              required
+            />
+          </div>
 
-                    <button
-                        type="submit"
-                        className="w-full bg-black text-white font-semibold py-2.5 rounded-lg hover:bg-gray-800 transition"
-                    >
-                        {isEdit ? "Update Lab" : "Add Lab"}
-                    </button>
-                </form>
-            </div>
+        
+          <div>
+            <label
+              htmlFor="location"
+              className="block mb-2 text-sm font-semibold text-gray-800"
+            >
+              Location
+            </label>
+            <input
+              onChange={handleChange}
+              value={input.location}
+              id="location"
+              placeholder="Enter location"
+              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-400 block w-full p-3 shadow-sm"
+              required
+            />
+          </div>
+
+        
+          <button
+            type="submit"
+            className="w-full py-3 font-semibold text-white rounded-lg bg-gradient-to-r from-indigo-500 to-pink-500 hover:opacity-90 shadow-md transition-all"
+          >
+            {isEdit ? "Update Lab" : "Add Lab"}
+          </button>
+        </form>
+
+        <div className="mt-6 text-center">
+          <button
+            onClick={() => navigate("/labs")}
+            className="text-indigo-600 hover:underline text-sm font-medium"
+          >
+            ← Back to Labs
+          </button>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default ManageLab;

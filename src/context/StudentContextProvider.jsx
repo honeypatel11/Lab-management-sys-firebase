@@ -25,7 +25,7 @@ const StudentContextProvider = ({ children }) => {
       });
     } catch (error) {
       console.log(error);
-      // toast.error("Something Went Wrong !")
+      toast.error("Something Went Wrong !")
     }
     await fetchStudent();
     await fetchPc();

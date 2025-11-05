@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { LabContext } from "../../context/LabContextProvider";
 import { PcContext } from "../../context/PcContextProvider";
@@ -8,111 +8,120 @@ import { db } from "../../config/firebase";
 
 const ManageStudent = () => {
   const [input, setInput] = useState({
-    name: "", email: "", grid: "", labId: "", pcId: ""
+    name: "",
+    email: "",
+    grid: "",
+    labId: "",
+    pcId: "",
   });
   const [isEdit, setIsEdit] = useState(false);
-  const [filteredPc, setFilteredPc] = useState([])
+  const [filteredPc, setFilteredPc] = useState([]);
   const { labs } = useContext(LabContext);
   const { pcs } = useContext(PcContext);
   const { addStudent, updateStudent } = useContext(StudentContext);
-  const { studentId } = useParams()
+  const { studentId } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (input.labId) {
-      const filteredPc = pcs.filter(
+      const filtered = pcs.filter(
         (pc) => pc.labId === input.labId && pc.status.toLowerCase() === "available"
       );
-      setFilteredPc(filteredPc);
+      setFilteredPc(filtered);
     }
   }, [input.labId, pcs]);
 
   useEffect(() => {
-    if (studentId) getStudent()
-  }, [studentId])
+    if (studentId) getStudent();
+  }, [studentId]);
+
+  const getStudent = async () => {
+    const studentData = await getDoc(doc(db, "students", studentId));
+    if (studentData.exists()) {
+      setIsEdit(true);
+      setInput(studentData.data());
+    }
+  };
 
   const handleChange = (e) => {
-    setInput({ ...input, [e.target.id]: e.target.value })
-  }
+    setInput({ ...input, [e.target.id]: e.target.value });
+  };
+
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (!isEdit) {
-      await addStudent(input)
-      navigate("/students")
+    e.preventDefault();
+    if (isEdit) {
+      await updateStudent(input, studentId);
     } else {
-      await updateStudent(input, studentId)
-      navigate("/students")
+      await addStudent(input);
     }
-  }
-  const getStudent = async () => {
-    const studentData = await getDoc(doc(db, "students", studentId))
-    if (studentData.exists()) {
-      setIsEdit(true)
-      setInput(studentData.data())
-    }
-  }
+    navigate("/students");
+  };
 
   return (
-    <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-10">
-      <div className="bg-white shadow-lg rounded-2xl w-full max-w-lg p-8">
-        <h1 className="text-3xl font-bold text-center mb-8 text-black">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-pink-100 to-purple-100 p-8">
+      <div className="bg-white/90 backdrop-blur-md border border-gray-200 shadow-2xl rounded-2xl w-full max-w-lg p-10 transition-all hover:shadow-pink-200">
+        <h1 className="text-4xl font-extrabold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-pink-600">
           {isEdit ? "Edit Student" : "Add New Student"}
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+      
           <div>
-            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">
+            <label htmlFor="name" className="block mb-2 text-sm font-semibold text-gray-800">
               Student Name
             </label>
             <input
-              onChange={handleChange}
-              value={input.name}
               id="name"
+              value={input.name}
+              onChange={handleChange}
               placeholder="Enter student name"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-black focus:border-black block w-full p-2.5"
+              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-pink-400 focus:border-pink-400 block w-full p-3 shadow-sm"
               required
             />
           </div>
 
+      
           <div>
-            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">
+            <label htmlFor="email" className="block mb-2 text-sm font-semibold text-gray-800">
               Email
             </label>
             <input
-              onChange={handleChange}
-              value={input.email}
-              type="email"
               id="email"
+              type="email"
+              value={input.email}
+              onChange={handleChange}
               placeholder="Enter email"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-black focus:border-black block w-full p-2.5"
+              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 block w-full p-3 shadow-sm"
               required
             />
           </div>
 
+       
           <div>
-            <label htmlFor="grid" className="block mb-2 text-sm font-medium text-gray-900">
-              GR NO.
+            <label htmlFor="grid" className="block mb-2 text-sm font-semibold text-gray-800">
+              GR No.
             </label>
             <input
-              onChange={handleChange}
-              value={input.grid}
-              type="number"
               id="grid"
-              placeholder="Enter GR NO."
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-black focus:border-black block w-full p-2.5"
+              type="number"
+              value={input.grid}
+              onChange={handleChange}
+              placeholder="Enter GR number"
+              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-pink-400 focus:border-pink-400 block w-full p-3 shadow-sm"
               required
             />
           </div>
 
+         
           <div>
-            <label htmlFor="labId" className="block mb-2 text-sm font-medium text-gray-900">
+            <label htmlFor="labId" className="block mb-2 text-sm font-semibold text-gray-800">
               Select Lab
             </label>
             <select
-              onChange={handleChange}
-              value={input.labId}
               id="labId"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-black focus:border-black block w-full p-2.5"
+              value={input.labId}
+              onChange={handleChange}
+              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 block w-full p-3 shadow-sm"
               required
             >
               <option value="">Choose a Lab</option>
@@ -124,15 +133,16 @@ const ManageStudent = () => {
             </select>
           </div>
 
+         
           <div>
-            <label htmlFor="pcId" className="block mb-2 text-sm font-medium text-gray-900">
+            <label htmlFor="pcId" className="block mb-2 text-sm font-semibold text-gray-800">
               Select PC
             </label>
             <select
-              onChange={handleChange}
-              value={input.pcId}
               id="pcId"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-black focus:border-black block w-full p-2.5"
+              value={input.pcId}
+              onChange={handleChange}
+              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-pink-400 focus:border-pink-400 block w-full p-3 shadow-sm"
               required
             >
               <option value="">Choose a PC</option>
@@ -144,16 +154,26 @@ const ManageStudent = () => {
             </select>
           </div>
 
+      
           <button
             type="submit"
-            className="w-full bg-black text-white font-semibold py-2.5 rounded-lg hover:bg-gray-800 transition"
+            className="w-full py-3 font-semibold text-white rounded-lg bg-gradient-to-r from-indigo-500 to-pink-500 hover:opacity-90 shadow-md transition-all"
           >
             {isEdit ? "Update Student" : "Add Student"}
           </button>
         </form>
+
+        <div className="mt-6 text-center">
+          <button
+            onClick={() => navigate("/students")}
+            className="text-indigo-600 hover:underline text-sm font-medium"
+          >
+            ← Back to Students
+          </button>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default ManageStudent;

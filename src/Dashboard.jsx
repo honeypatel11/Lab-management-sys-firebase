@@ -1,7 +1,4 @@
 import { useContext, useEffect } from "react";
-import { LabContext } from "../context/LabContextProvider";
-import { PcContext } from "../context/PcContextProvider";
-import { StudentContext } from "../context/StudentContextProvider";
 import { Bar, Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -13,6 +10,9 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { LabContext } from "./context/LabContextProvider";
+import { PcContext } from "./context/PcContextProvider";
+import { StudentContext } from "./context/StudentContextProvider";
 
 ChartJS.register(
   CategoryScale,
@@ -47,7 +47,7 @@ const Dashboard = () => {
         data: pcCounts,
         backgroundColor: "#ec4899",
         borderRadius: 6,
-        barThickness: 20,
+        barThickness: 22,
       },
     ],
   };
@@ -60,7 +60,7 @@ const Dashboard = () => {
   });
 
   const pcStatusData = {
-    labels: ["Available", "Occupied", "In-Repairing", "Labs", "PCs", "Students"],
+    labels: ["Available", "Occupied", "In-Repairing"],
     datasets: [
       {
         label: "PC Status",
@@ -72,75 +72,117 @@ const Dashboard = () => {
         backgroundColor: ["#22c55e", "#ec4899", "#000"],
         borderWidth: 2,
       },
-      {
-        label: "Summary",
-        data: [labs.length, pcs.length, students.length],
-        backgroundColor: ["#f5f5f5", "#d1d5db", "#e5e7eb"],
-        borderWidth: 2,
-      },
     ],
   };
 
   return (
-    <div className="bg-white min-h-screen p-8 text-black">
-      <h1 className="text-3xl font-bold mb-10">Dashboard</h1>
+    <div className="min-h-screen bg-gray-50 p-8">
+      <h1 className="text-4xl font-extrabold text-gray-900 mb-8">
+        Dashboard Overview
+      </h1>
 
-      <div className=" w-6/12 p-8 rounded-xl  mb-12">
-        <h2 className="text-2xl font-semibold mb-6 text-gray-900">Overview</h2>
-
-        <div className="flex flex-wrap gap-4">
-          <div className="flex items-center gap-2 bg-pink-100 text-pink-700 px-5 py-2 rounded-full shadow-sm">
-            <span className="font-medium">Labs:</span>
-            <span className="font-bold text-lg">{labs.length}</span>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <div className="bg-pink-50 border border-pink-200 rounded-2xl shadow-sm hover:shadow-lg transition-all p-6 flex justify-between items-center">
+          <div>
+            <h3 className="text-lg font-semibold text-pink-600">Total Labs</h3>
+            <p className="text-3xl font-bold mt-2">{labs.length}</p>
           </div>
-
-          <div className="flex items-center gap-2 bg-black text-white px-5 py-2 rounded-full shadow-sm">
-            <span className="font-medium">PCs:</span>
-            <span className="font-bold text-lg">{pcs.length}</span>
+          <div className="bg-pink-100 p-3 rounded-full">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/3649/3649468.png"
+              alt="labs"
+              className="w-10 h-10"
+            />
           </div>
+        </div>
 
-          <div className="flex items-center gap-2 bg-gray-100 text-gray-800 px-5 py-2 rounded-full shadow-sm border">
-            <span className="font-medium">Students:</span>
-            <span className="font-bold text-lg">{students.length}</span>
+        <div className="bg-black text-white border border-gray-800 rounded-2xl shadow-sm hover:shadow-lg transition-all p-6 flex justify-between items-center">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-300">Total PCs</h3>
+            <p className="text-3xl font-bold mt-2">{pcs.length}</p>
+          </div>
+          <div className="bg-gray-800 p-3 rounded-full">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/2920/2920321.png"
+              alt="pcs"
+              className="w-10 h-10"
+            />
+          </div>
+        </div>
+
+        <div className="bg-gray-100 border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition-all p-6 flex justify-between items-center">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-700">
+              Total Students
+            </h3>
+            <p className="text-3xl font-bold mt-2">{students.length}</p>
+          </div>
+          <div className="bg-white p-3 rounded-full border">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+              alt="students"
+              className="w-10 h-10"
+            />
           </div>
         </div>
       </div>
 
-
-      {/* Charts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Slim Bar Chart */}
-        <div className="p-6 bg-white border rounded-xl shadow-md flex flex-col items-center">
-          <h3 className="text-xl font-semibold mb-4">PCs per Lab</h3>
-          <div className="w-[85%] h-[250px]">
+ 
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+   
+        <div className="bg-white p-8 border rounded-2xl shadow-md hover:shadow-lg transition-all">
+          <h2 className="text-xl font-semibold mb-6 text-gray-800">
+            PCs per Lab
+          </h2>
+          <div className="w-full h-[300px]">
             <Bar
               data={pcPerLabData}
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: { backgroundColor: "#000", titleColor: "#fff" },
+                },
                 scales: {
-                  y: { beginAtZero: true, ticks: { stepSize: 1 } },
-                  x: { ticks: { color: "#000" } },
+                  y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1, color: "#4b5563" },
+                    grid: { color: "#e5e7eb" },
+                  },
+                  x: {
+                    ticks: { color: "#4b5563" },
+                    grid: { display: false },
+                  },
                 },
               }}
             />
           </div>
         </div>
 
-        {/* Multi-level Doughnut Chart */}
-        <div className="p-6 bg-white border rounded-xl shadow-md flex flex-col items-center">
-          <h3 className="text-xl font-semibold mb-4">PC Status Overview</h3>
-          <div className="w-[60%] h-[240px]">
+       
+        <div className="bg-white p-8 border rounded-2xl shadow-md hover:shadow-lg transition-all">
+          <h2 className="text-xl font-semibold mb-6 text-gray-800">
+            PC Status Overview
+          </h2>
+          <div className="w-[70%] mx-auto h-[260px]">
             <Doughnut
               data={pcStatusData}
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: "60%", // inner hole size
+                cutout: "65%",
                 plugins: {
-                  legend: { position: "bottom" },
-                  tooltip: { enabled: true },
+                  legend: {
+                    position: "bottom",
+                    labels: { color: "#374151", boxWidth: 15, padding: 15 },
+                  },
+                  tooltip: {
+                    backgroundColor: "#111",
+                    titleColor: "#fff",
+                    bodyColor: "#fff",
+                  },
                 },
               }}
             />
