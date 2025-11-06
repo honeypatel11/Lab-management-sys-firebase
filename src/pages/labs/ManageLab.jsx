@@ -62,7 +62,7 @@ const ManageLab = () => {
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-        
+
           <div>
             <label
               htmlFor="name"
@@ -80,8 +80,8 @@ const ManageLab = () => {
             />
           </div>
 
-      
-          <div>
+
+          <div className={`${isEdit ? "hidden" : "block"}`}>
             <label
               htmlFor="capacity"
               className="block mb-2 text-sm font-semibold text-gray-800"
@@ -93,12 +93,12 @@ const ManageLab = () => {
               value={input.capacity}
               id="capacity"
               placeholder="Enter capacity"
-              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 block w-full p-3 shadow-sm"
+              className={` bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 block w-full p-3 shadow-sm `}
               required
             />
           </div>
 
-        
+
           <div>
             <label
               htmlFor="location"
@@ -116,7 +116,7 @@ const ManageLab = () => {
             />
           </div>
 
-        
+
           <button
             type="submit"
             className="w-full py-3 font-semibold text-white rounded-lg bg-gradient-to-r from-indigo-500 to-pink-500 hover:opacity-90 shadow-md transition-all"

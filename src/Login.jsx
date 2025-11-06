@@ -41,8 +41,8 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-100">
       <div className="bg-white/80 backdrop-blur-xl border border-white/50 shadow-2xl rounded-2xl w-80 md:w-96 p-8 transition-transform hover:scale-[1.01] duration-200">
-        <h1 className="text-4xl font-extrabold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-pink-600 drop-shadow-sm">
-          Lab Login
+        <h1 className="text-4xl pb-3 font-extrabold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-pink-600 drop-shadow-sm">
+          Admin Login
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">

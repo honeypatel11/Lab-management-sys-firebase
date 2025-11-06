@@ -55,7 +55,7 @@ const StudentContextProvider = ({ children }) => {
       const studentData = studentDoc.data();
 
       await deleteDoc(doc(db, "students", studentId));
-      toast.success("Delete Student Successfully!");
+      toast.error("Delete Student Successfully!");
 
       if (studentData.pcId) {
         await updateDoc(doc(db, "pcs", studentData.pcId), {
@@ -78,6 +78,7 @@ const StudentContextProvider = ({ children }) => {
     try {
       await updateDoc(doc(db, "students", studentId), updatedVal)
       fetchStudent()
+      toast.success("update successfully!")
     } catch (error) {
       console.log(error);
       toast.error("Something Went Wrong !")

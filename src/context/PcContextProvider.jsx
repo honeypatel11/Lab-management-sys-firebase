@@ -63,6 +63,7 @@ const PcContextProvider = ({ children }) => {
 
       await deleteDoc(doc(db, "pcs", pcId))
       fetchPc()
+      toast.error("delete successfully !")
     } catch (error) {
       console.log(error);
       toast.error("Something Went Wrong !")

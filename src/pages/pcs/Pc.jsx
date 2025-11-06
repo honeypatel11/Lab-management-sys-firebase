@@ -18,7 +18,7 @@ const Pc = () => {
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-100 p-10 text-gray-900">
    
       <div className="flex items-center justify-between mb-10">
-        <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-pink-500 drop-shadow-sm">
+        <h2 className="text-4xl font-extrabold pb-3 text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-pink-500 drop-shadow-sm">
           PC Management
         </h2>
         <button
@@ -56,7 +56,7 @@ const Pc = () => {
                   {pc.name}
                 </td>
                 <td className="px-6 py-4 text-gray-800">
-                  {showLabName(pc.labId)}
+                  {showLabName(pc.labId) || "Unassigned"}
                 </td>
                 <td
                   className={`px-6 py-4 font-semibold ${

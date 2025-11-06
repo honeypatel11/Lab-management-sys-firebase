@@ -59,6 +59,7 @@ const LabContextProvider = ({ children }) => {
 
       await deleteDoc(doc(db, "labs", labId))
       fetchLab()
+      toast.error("delete successfully !")
     } catch (error) {
       console.log(error);
       toast.error("Something Went Wrong !")
